@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -40,6 +41,20 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core-network"))
+    implementation(project(":core-utils"))
+    implementation(project(":feature-music-list"))
+    implementation(project(":feature-auth-api"))
+    implementation(project(":feature-auth-impl"))
+
+
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+    implementation(libs.dagger.android)
+    implementation(libs.dagger.android.support)
+    ksp(libs.dagger.android.processor)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
