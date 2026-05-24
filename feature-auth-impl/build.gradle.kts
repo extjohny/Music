@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -33,6 +34,13 @@ android {
 }
 
 dependencies {
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
+    implementation(libs.dagger.android)
+    implementation(libs.dagger.android.support)
+    ksp(libs.dagger.android.processor)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
