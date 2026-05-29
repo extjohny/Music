@@ -1,16 +1,15 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "ru.abdulkhalikow.music"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ru.abdulkhalikow.music"
@@ -35,25 +34,29 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
     buildFeatures {
         compose = true
     }
 }
 
 dependencies {
-
-    implementation(project(":core-network"))
+    api(project(":core-network"))
     implementation(project(":core-utils"))
     implementation(project(":feature-music-list"))
     implementation(project(":feature-auth-api"))
     implementation(project(":feature-auth-impl"))
 
-
     implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
-    implementation(libs.dagger.android)
-    implementation(libs.dagger.android.support)
-    ksp(libs.dagger.android.processor)
+    kapt(libs.dagger.compiler)
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
