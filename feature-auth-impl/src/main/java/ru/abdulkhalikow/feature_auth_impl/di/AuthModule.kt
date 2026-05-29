@@ -1,16 +1,20 @@
 package ru.abdulkhalikow.feature_auth_impl.di
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.abdulkhalikow.core_utils.AuthInterceptor
 import ru.abdulkhalikow.core_utils.JamendoClientId
 import ru.abdulkhalikow.core_utils.JamendoClientSecret
 import ru.abdulkhalikow.core_utils.JamendoRedirectUrl
 import ru.abdulkhalikow.feature_auth_api.AuthProvider
 import ru.abdulkhalikow.feature_auth_impl.BuildConfig
+import ru.abdulkhalikow.feature_auth_impl.data.AuthInterceptorImpl
 import ru.abdulkhalikow.feature_auth_impl.data.AuthProviderImpl
 import ru.abdulkhalikow.feature_auth_impl.data.JamendoAuthApi
 import javax.inject.Singleton
@@ -35,10 +39,6 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthProvider(impl: AuthProviderImpl): AuthProvider = impl
-
-    @Provides
-    @Singleton
     fun provideJamendoAuthApi(): JamendoAuthApi {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -54,4 +54,17 @@ object AuthModule {
             .build()
             .create(JamendoAuthApi::class.java)
     }
+}
+
+@Module
+interface AuthBindModule {
+
+    @Binds
+    @Singleton
+    @AuthInterceptor
+    fun bindsAuthInterceptor(impl: AuthInterceptorImpl): Interceptor
+
+    @Binds
+    @Singleton
+    fun provideAuthProvider(impl: AuthProviderImpl): AuthProvider
 }
